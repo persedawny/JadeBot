@@ -1,7 +1,7 @@
-import { TestEntity } from "./testEntity";
+import { EventEntity } from "./eventEntity";
 
 export class DatabaseCreator{
     static CreateDatabase(client){
-        new TestEntity(client).CreateTable();
+        new EventEntity(client).CreateTable();
     }
 }
