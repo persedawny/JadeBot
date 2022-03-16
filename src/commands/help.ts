@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
 
@@ -17,7 +17,7 @@ export default class implements ICommand {
     }
     
     // TODO: Maak dit eens even beter
-    execute(interaction: Message): void {
+    execute(interaction: CommandInteraction): void {
         var reaction = "";
 
         this.client.commands.forEach(command => {

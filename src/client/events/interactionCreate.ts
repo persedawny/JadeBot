@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { CommandInteraction } from "discord.js";
 
 export default {
 	name: 'interactionCreate',
@@ -10,9 +10,9 @@ export default {
 		if (!command) return;
 		
 		try {
-			let message = interaction as Message;
+			let message = interaction as CommandInteraction;
 			
-			if(command.isAdminOnly || message.author.id != '115175198537285635'){
+			if(command.isAdminOnly && message.user.id != '115175198537285635'){
 				message.reply("Not authorised - Administrator permission required");
 				return;
 			}

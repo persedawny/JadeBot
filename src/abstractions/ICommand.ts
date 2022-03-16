@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { CustomClient } from "../client/customClient";
 
 export interface ICommand {
@@ -7,5 +7,5 @@ export interface ICommand {
     client: CustomClient;
     isAdminOnly: boolean;
     
-    execute: (interaction: Message) => void;
+    execute: (interaction: CommandInteraction) => void;
 }

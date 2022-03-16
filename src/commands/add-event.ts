@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
 import { EventEntity } from "../database/eventEntity";
@@ -69,17 +70,17 @@ export default class implements ICommand {
         this.client = client;
     }
 
-    execute(interaction: any): void {
-        var text = interaction.options._hoistedOptions[0].value;
-        var month = interaction.options._hoistedOptions[1].value;
-        var day = interaction.options._hoistedOptions[2].value;
-        var year = interaction.options._hoistedOptions[3].value;
-        var category = interaction.options._hoistedOptions[4].value;
+    execute(interaction: CommandInteraction): void {
+        var text = interaction.options.getString("text");
+        var month = interaction.options.getString("month");
+        var day = interaction.options.getNumber("day");
+        var year = interaction.options.getNumber("year");
+        var category = interaction.options.getString("category");
 
         var event = new EventEntity(this.client);
-        event.day = day;
+        event.day = day.toString();
         event.month = month;
-        event.year = year;
+        event.year = year.toString();
         event.text = text;
         event.category = category
         event.accepted = '0';
