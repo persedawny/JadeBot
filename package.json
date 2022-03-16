@@ -1,0 +1,23 @@
+{
+  "name": "discordjs-boilerplate-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node-dev --respawn --transpile-only --poll ./src/index.ts",
+    "deploy-commands": "ts-node-dev --respawn --transpile-only --poll ./src/deploy-commands.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.0",
+  "dependencies": {
+    "@discordjs/rest": "^0.3.0",
+    "better-sqlite3": "^7.5.0",
+    "cron": "^1.8.2",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.2"
+  }
+}
