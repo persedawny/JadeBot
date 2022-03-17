@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
 
@@ -15,16 +15,18 @@ export default class implements ICommand {
 
         this.client = client;
     }
-    
-    // TODO: Maak dit eens even beter
+
     execute(interaction: CommandInteraction): void {
-        var reaction = "";
+        // TODO: Embed maker in boilerplate?
+        let exampleEmbed = new MessageEmbed()
+        .setAuthor({ name: this.client.user.username, iconURL: this.client.user.avatarURL() })
+        .setTimestamp()
+        .setColor("#ADD8E6");
 
         this.client.commands.forEach(command => {
-            let commandText = `${command.data.name}: ${command.data.description} \n`;
-            reaction += commandText;
+            exampleEmbed.addField(command.data.name, command.data.description, true);
         });
 
-        interaction.reply(reaction);
+        interaction.reply({ embeds: [exampleEmbed] });
     }
 }
