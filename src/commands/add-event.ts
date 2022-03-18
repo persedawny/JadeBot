@@ -49,7 +49,7 @@ export default class implements ICommand {
             option
             .setName('year')
             .setDescription("What year did this happen in?")
-            .setRequired(true)
+            .setRequired(false)
         );
 
         this.data.addStringOption(option =>
@@ -65,6 +65,8 @@ export default class implements ICommand {
             .addChoice("Religion", "Religion")
             .addChoice("Sports", "Sports")
             .addChoice("Science and Technology", "Science and Technology")
+            .addChoice("Birthday", "Birthday")
+            .addChoice("Games", "Games")
         );
         
         this.client = client;
@@ -74,13 +76,13 @@ export default class implements ICommand {
         var text = interaction.options.getString("text");
         var month = interaction.options.getString("month");
         var day = interaction.options.getNumber("day");
-        var year = interaction.options.getNumber("year");
+        var year = interaction.options.getString("year");
         var category = interaction.options.getString("category");
 
         var event = new EventEntity(this.client);
         event.day = day.toString();
         event.month = month;
-        event.year = year.toString();
+        event.year = year;
         event.text = text;
         event.category = category
         event.accepted = '0';

@@ -44,7 +44,7 @@ class CustomClient extends Client {
 
         for (const file of jobFiles) {
             let job = require(`../cronjobs/jobs/${file}`);
-            new job.default().start();
+            new job.default(this).start();
         }
     }
 }
