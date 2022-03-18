@@ -28,13 +28,20 @@ export default class extends CustomCronJob{
                     this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Birthday'), '👶 Birthday', exampleEmbed);
                     this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Games'), '🎮 Games', exampleEmbed);
 
-                    // TODO: werkt nog niet!
-                    let channel = client.channels.cache.get(`673917864532639774`) as TextChannel;
-                    channel.send({ embeds: [exampleEmbed] });
+                    client.channels.fetch(`673917865375825932`).then(
+                        result => {
+                            var channel = result as TextChannel;
+                            channel.send({ embeds: [exampleEmbed] });
+                        }
+                    );
                 }
                 else {
-                    let channel = client.channels.cache.get(`673917864532639774`) as TextChannel;
-                    channel.send(`Wow, as far as I know nothing really happened today!\n If you can think of something, please consider adding it with /add-event :) .`);
+                    client.channels.fetch(`673917865375825932`).then(
+                        result => {
+                            var channel = result as TextChannel;
+                            channel.send(`Wow, as far as I know nothing really happened today!\n If you can think of something, please consider adding it with /add-event :) .`);
+                        }
+                    );
                 }
             });
     }
