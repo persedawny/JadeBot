@@ -1,5 +1,8 @@
 import { CommandInteraction } from "discord.js";
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 export default {
 	name: 'interactionCreate',
 	async execute(interaction) {
@@ -12,7 +15,7 @@ export default {
 		try {
 			let message = interaction as CommandInteraction;
 			
-			if(command.isAdminOnly && message.user.id != '115175198537285635'){
+			if(command.isAdminOnly && message.user.id != process.env.ADMIN_ID){
 				message.reply("Not authorised - Administrator permission required");
 				return;
 			}

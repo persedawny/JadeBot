@@ -4,7 +4,7 @@ import Database from 'better-sqlite3';
 
 const fs = require('fs');
 
-class CustomClient extends Client {
+export class CustomClient extends Client {
     commands: Collection<string, ICommand>;
     databaseConnection: Database;
 
@@ -48,5 +48,3 @@ class CustomClient extends Client {
         }
     }
 }
-
-export {CustomClient}
