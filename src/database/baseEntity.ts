@@ -1,34 +1,19 @@
-import { CustomClient } from "../client/customClient";
-
 export class BaseEntity {
     rowid: number;
-    private client: CustomClient;
     tableName: string;
 
-    constructor(client, tableName?) {
+    constructor(tableName?: string) {
         this.rowid = 0;
-        this.client = client;
         this.tableName = tableName;
     }
 
-    private RunQuery(query){
-        try {
-            let preparedQuery = this.client.databaseConnection.prepare(query);
-            preparedQuery.run()
-        } catch (ex) {
-            throw ex;
-        }
+    public getCreateTableQuery() {
+        let properties = this.getDerivedClassProperties();
+        return "CREATE TABLE IF NOT EXISTS " + this.tableName + " (rowid INTEGER PRIMARY KEY NOT NULL, " + properties.join(', ') + ")";
     }
 
-    public CreateTable() {
-        let properties = this.GetDerivedClassProperties();
-        let query = "CREATE TABLE IF NOT EXISTS " + this.tableName + " (rowid INTEGER PRIMARY KEY NOT NULL, " + properties.join(', ') + ")";
-
-        this.RunQuery(query);
-    }
-
-    private GetDerivedClassProperties(){
-        let newBase = new BaseEntity(this.client);
+    private getDerivedClassProperties(){
+        let newBase = new BaseEntity();
         let baseProperties = Object.getOwnPropertyNames(newBase);
         let properties = Object.getOwnPropertyNames(this);
 

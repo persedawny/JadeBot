@@ -15,7 +15,7 @@ export default {
 		try {
 			let message = interaction as CommandInteraction;
 			
-			if(command.isAdminOnly && message.user.id != process.env.ADMIN_ID){
+			if(command.isAdminOnly && message.user.id != process.env.ADMIN_ID) {
 				message.reply("Not authorised - Administrator permission required");
 				return;
 			}

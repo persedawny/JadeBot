@@ -1,21 +1,23 @@
 import { Client, Collection, Intents } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
-import Database from 'better-sqlite3';
+import { FileReader } from "../helpers/fileReader";
 
-const fs = require('fs');
+import Database from 'better-sqlite3';
 
 export class CustomClient extends Client {
     commands: Collection<string, ICommand>;
     databaseConnection: Database;
+    fileReader: FileReader;
 
     constructor() {
         super({ intents: [Intents.FLAGS.GUILDS] });
         this.commands = new Collection();
         this.databaseConnection = new Database('database.db', { verbose: console.log });
+        this.fileReader = new FileReader();
     }
 
     initializeEvents() {
-        let eventFiles = fs.readdirSync('./src/client/events').filter(file => file.endsWith('.ts'));
+        var eventFiles = this.fileReader.getAllFilesFromDirectory('./src/client/events', '.ts');
 
         for (let file of eventFiles) {
             let event = require(`./events/${file}`);
@@ -29,7 +31,7 @@ export class CustomClient extends Client {
     }
 
     initializeCommands() {
-        const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.ts'));
+        const commandFiles = this.fileReader.getAllFilesFromDirectory('./src/commands', '.ts');
 
         for (let file of commandFiles) {
             let commandFile = require(`../commands/${file}`);
@@ -40,7 +42,7 @@ export class CustomClient extends Client {
     }
 
     initializeAndStartCronJobs() {
-        let jobFiles = fs.readdirSync('./src/cronjobs/jobs').filter(file => file.endsWith('.ts'));
+        let jobFiles = this.fileReader.getAllFilesFromDirectory('./src/cronjobs/jobs', '.ts');
 
         for (const file of jobFiles) {
             let job = require(`../cronjobs/jobs/${file}`);
