@@ -8,7 +8,7 @@ export class EventEntity extends BaseEntity {
     accepted: string;
     category: string;
 
-    constructor(client){
-        super(client, "Event");
+    constructor(){
+        super("Event");
     }
 }
