@@ -1,9 +1,9 @@
 import { CustomClient } from "../client/customClient";
-import { TestEntity } from "./testEntity";
+import { EventEntity } from "./eventEntity";
 
 export class DatabaseCreator{
     static CreateDatabase(client : CustomClient) {
-        var test = client.databaseConnection.prepare(new TestEntity().getCreateTableQuery());
+        var test = client.databaseConnection.prepare(new EventEntity().getCreateTableQuery());
         test.run();
     }
 }
