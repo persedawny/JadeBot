@@ -3,11 +3,13 @@ import { CommandInteraction } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
 import { EventEntity } from "../database/eventEntity";
+import { EventRepository } from "../repos/eventRepository";
 
 export default class implements ICommand {
     data: SlashCommandBuilder;
     client: CustomClient;
     isAdminOnly: boolean = false;
+    eventRepo: EventRepository;
     
     constructor(client: CustomClient){
         this.data = new SlashCommandBuilder()
@@ -70,6 +72,7 @@ export default class implements ICommand {
         );
         
         this.client = client;
+        this.eventRepo = new EventRepository(client);
     }
 
     execute(interaction: CommandInteraction): void {
@@ -87,8 +90,7 @@ export default class implements ICommand {
         event.category = category
         event.accepted = '0';
 
-        let query = this.client.databaseConnection.prepare(`INSERT INTO ${event.tableName} (text, day, month, year, accepted, category) VALUES (?, ?, ?, ?, ?, ?)`);
-        query.run([event.text, event.day, event.month, event.year, event.accepted, event.category]);
+        this.eventRepo.add(event);
         interaction.reply("Did it!");
     }
 }

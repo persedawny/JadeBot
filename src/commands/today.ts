@@ -3,11 +3,13 @@ import { CommandInteraction, MessageEmbed } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
 import { EventEntity } from "../database/eventEntity";
+import { EventRepository } from "../repos/eventRepository";
 
 export default class implements ICommand {
     data: SlashCommandBuilder;
     client: CustomClient;
     isAdminOnly: boolean = false;
+    eventRepo: EventRepository;
     
     constructor(client: CustomClient){
         this.data = new SlashCommandBuilder()
@@ -15,6 +17,7 @@ export default class implements ICommand {
 		    .setDescription('Show the events of today');
         
         this.client = client;
+        this.eventRepo = new EventRepository(client);
     }
 
     execute(interaction: CommandInteraction): void {
@@ -23,7 +26,7 @@ export default class implements ICommand {
         var month = dateObj.getUTCMonth() + 1; //months from 1-12
         var day = dateObj.getUTCDate();
 
-        var result = this.client.databaseConnection.prepare(`SELECT * FROM Event WHERE Event.day = '${day}' AND Event.month = '${this.getDateStringFromNumber(month)}' AND Event.accepted = '1'`).all() as Array<EventEntity>;
+        var result = this.eventRepo.getEventsByDate(day, month);
         
         if(result.length > 0) {
             let exampleEmbed = new MessageEmbed()
@@ -51,7 +54,7 @@ export default class implements ICommand {
         if(events.length > 0){
             let eventText = '';
             events.forEach(x => {
-                if(x.year){
+                if(x.year) {
                     eventText = `${x.year} - `
                 }
                 
@@ -59,39 +62,6 @@ export default class implements ICommand {
             });
     
             embed.addField(categoryTitle, eventText, true);
-        }
-    }
-
-    // TODO: fix dit in de boilerplate, luie zak
-    getDateStringFromNumber(monthId: number): string{
-        switch (monthId) {
-            case 1:
-                return "January";
-            case 2:
-                return "February";
-            case 3:
-                return "March";
-            case 4:
-                return "April";
-            case 5:
-                return "May";
-            case 6:
-                return "June";
-            case 7:
-                return "July";
-            case 8:
-                return "August";
-            case 9:
-                return "September";
-            case 10:
-                return "October";
-            case 11:
-                return "November";
-            case 12:
-                return "December";
-        
-            default:
-                throw new Error("That is not a valid month!");
         }
     }
 }

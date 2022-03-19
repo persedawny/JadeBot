@@ -1,17 +1,20 @@
 import { MessageEmbed, TextChannel } from "discord.js";
 import { CustomClient } from "../../client/customClient";
 import { EventEntity } from "../../database/eventEntity";
+import { EventRepository } from "../../repos/eventRepository";
 import { CustomCronJob } from "../customCronJob";
 
 export default class extends CustomCronJob{
     constructor(client : CustomClient){
         super('00', '00', '9',
             () => {
+                var eventRepo = new EventRepository(client);
+
                 var dateObj = new Date();
                 var month = dateObj.getUTCMonth() + 1; //months from 1-12
                 var day = dateObj.getUTCDate();
                 
-                var result = client.databaseConnection.prepare(`SELECT * FROM Event WHERE Event.day = '${day}' AND Event.month = '${this.getDateStringFromNumber(month)}' AND Event.accepted = '1'`).all() as Array<EventEntity>;
+                var result = eventRepo.getEventsByDate(day, month);
                 
                 if(result.length > 0) {
                     let exampleEmbed = new MessageEmbed()
@@ -58,39 +61,6 @@ export default class extends CustomCronJob{
             });
     
             embed.addField(categoryTitle, eventText, true);
-        }
-    }
-
-    // TODO: fix dit in de boilerplate, luie zak
-    getDateStringFromNumber(monthId: number): string{
-        switch (monthId) {
-            case 1:
-                return "January";
-            case 2:
-                return "February";
-            case 3:
-                return "March";
-            case 4:
-                return "April";
-            case 5:
-                return "May";
-            case 6:
-                return "June";
-            case 7:
-                return "July";
-            case 8:
-                return "August";
-            case 9:
-                return "September";
-            case 10:
-                return "October";
-            case 11:
-                return "November";
-            case 12:
-                return "December";
-        
-            default:
-                throw new Error("That is not a valid month!");
         }
     }
 }
