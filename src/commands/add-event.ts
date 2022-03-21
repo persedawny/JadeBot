@@ -82,7 +82,7 @@ export default class implements ICommand {
         var year = interaction.options.getString("year");
         var category = interaction.options.getString("category");
 
-        var event = new EventEntity(this.client);
+        var event = new EventEntity();
         event.day = day.toString();
         event.month = month;
         event.year = year;
