@@ -1,9 +1,14 @@
 import { CustomClient } from "../client/customClient";
-import { EventEntity } from "./eventEntity";
+import { FileReader } from "../helpers/fileReader";
 
 export class DatabaseCreator{
-    static CreateDatabase(client : CustomClient) {
-        var test = client.databaseConnection.prepare(new EventEntity().getCreateTableQuery());
-        test.run();
+    static CreateDatabase(client : CustomClient){
+        var files = new FileReader().getAllFilesFromDirectory('src/database/models', '.ts');
+
+        files.forEach(entityFile => {
+            let entity = require(`./models/${entityFile}`);
+            var query = client.databaseConnection.prepare(new entity.default().getCreateTableQuery());
+            query.run();
+        });
     }
 }

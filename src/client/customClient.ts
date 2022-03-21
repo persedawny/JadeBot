@@ -17,7 +17,7 @@ export class CustomClient extends Client {
     }
 
     initializeEvents() {
-        var eventFiles = this.fileReader.getAllFilesFromDirectory('./src/client/events', '.ts');
+        var eventFiles = this.fileReader.getAllFilesFromDirectory('src/client/events', '.ts');
 
         for (let file of eventFiles) {
             let event = require(`./events/${file}`);
@@ -31,7 +31,7 @@ export class CustomClient extends Client {
     }
 
     initializeCommands() {
-        const commandFiles = this.fileReader.getAllFilesFromDirectory('./src/commands', '.ts');
+        const commandFiles = this.fileReader.getAllFilesFromDirectory('src/commands', '.ts');
 
         for (let file of commandFiles) {
             let commandFile = require(`../commands/${file}`);
@@ -42,7 +42,7 @@ export class CustomClient extends Client {
     }
 
     initializeAndStartCronJobs() {
-        let jobFiles = this.fileReader.getAllFilesFromDirectory('./src/cronjobs/jobs', '.ts');
+        let jobFiles = this.fileReader.getAllFilesFromDirectory('src/cronjobs/jobs', '.ts');
 
         for (const file of jobFiles) {
             let job = require(`../cronjobs/jobs/${file}`);
