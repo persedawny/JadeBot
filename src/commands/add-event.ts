@@ -2,8 +2,9 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
-import { EventEntity } from "../database/eventEntity";
 import { EventRepository } from "../repos/eventRepository";
+
+const eventEntity = require('../database/models/eventEntity').default;
 
 export default class implements ICommand {
     data: SlashCommandBuilder;
@@ -20,6 +21,23 @@ export default class implements ICommand {
             option.setName('text')
                 .setDescription(`What happened?`)
                 .setRequired(true));
+
+        this.data.addStringOption(option =>
+            option
+                .setName('category')
+                .setDescription("What category do you wanna add this event to?")
+                .setRequired(true)
+                .addChoice("General","General")
+                .addChoice("Architecture", "Architecture")
+                .addChoice("War", "War")
+                .addChoice("Politics", "Politics")
+                .addChoice("Art and Culture", "Art and Culture")
+                .addChoice("Religion", "Religion")
+                .addChoice("Sports", "Sports")
+                .addChoice("Science and Technology", "Science and Technology")
+                .addChoice("Birthday", "Birthday")
+                .addChoice("Games", "Games")
+            );
 
         this.data.addStringOption(option =>
             option
@@ -53,23 +71,6 @@ export default class implements ICommand {
             .setDescription("What year did this happen in?")
             .setRequired(false)
         );
-
-        this.data.addStringOption(option =>
-            option
-            .setName('category')
-            .setDescription("What category do you wanna add this event to?")
-            .setRequired(true)
-            .addChoice("General","General")
-            .addChoice("Architecture", "Architecture")
-            .addChoice("War", "War")
-            .addChoice("Politics", "Politics")
-            .addChoice("Art and Culture", "Art and Culture")
-            .addChoice("Religion", "Religion")
-            .addChoice("Sports", "Sports")
-            .addChoice("Science and Technology", "Science and Technology")
-            .addChoice("Birthday", "Birthday")
-            .addChoice("Games", "Games")
-        );
         
         this.client = client;
         this.eventRepo = new EventRepository(client);
@@ -82,7 +83,7 @@ export default class implements ICommand {
         var year = interaction.options.getString("year");
         var category = interaction.options.getString("category");
 
-        var event = new EventEntity();
+        var event = new eventEntity();
         event.day = day.toString();
         event.month = month;
         event.year = year;

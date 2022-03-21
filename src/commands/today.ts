@@ -2,7 +2,8 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
-import { EventEntity } from "../database/eventEntity";
+import { EventEntity } from "../database/models/eventEntity";
+import { DateHelper } from "../helpers/dateHelper";
 import { EventRepository } from "../repos/eventRepository";
 
 export default class implements ICommand {
@@ -10,6 +11,7 @@ export default class implements ICommand {
     client: CustomClient;
     isAdminOnly: boolean = false;
     eventRepo: EventRepository;
+    dateHelper: DateHelper;
     
     constructor(client: CustomClient){
         this.data = new SlashCommandBuilder()
@@ -18,13 +20,12 @@ export default class implements ICommand {
         
         this.client = client;
         this.eventRepo = new EventRepository(client);
+        this.dateHelper = new DateHelper();
     }
 
     execute(interaction: CommandInteraction): void {
-        // TODO: fix dit in de boilerplate, luie zak
-        var dateObj = new Date();
-        var month = dateObj.getUTCMonth() + 1; //months from 1-12
-        var day = dateObj.getUTCDate();
+        var month = this.dateHelper.getCurrentDateDayNumber();
+        var day = this.dateHelper.getCurrentDateMonthNumber();
 
         var result = this.eventRepo.getEventsByDate(day, month);
         

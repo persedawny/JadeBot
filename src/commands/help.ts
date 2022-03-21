@@ -24,7 +24,13 @@ export default class implements ICommand {
         .setColor("#ADD8E6");
 
         this.client.commands.forEach(command => {
-            exampleEmbed.addField(command.data.name, command.data.description, true);
+            let description = `${command.data.description}`;
+
+            if(command.isAdminOnly){
+                description += `\n[ADMIN ONLY]`
+            }
+
+            exampleEmbed.addField(command.data.name, description, true);
         });
 
         interaction.reply({ embeds: [exampleEmbed] });

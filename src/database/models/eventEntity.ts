@@ -1,6 +1,6 @@
-import { BaseEntity } from "./baseEntity";
+import { BaseEntity } from "../../abstractions/baseEntity";
 
-export class EventEntity extends BaseEntity { 
+export default class extends BaseEntity { 
     text: string;
     month: string;
     day: string;
