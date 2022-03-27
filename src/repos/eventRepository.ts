@@ -1,5 +1,5 @@
 import { CustomClient } from "../client/customClient";
-import { EventEntity } from "../database/models/eventEntity";
+import EventEntity from "../database/models/eventEntity";
 import { DateHelper } from "../helpers/dateHelper";
 
 export class EventRepository {

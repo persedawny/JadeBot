@@ -2,15 +2,15 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
-import { EventEntity } from "../database/models/eventEntity";
+import EventEntity from "../database/models/eventEntity";
 import { DateHelper } from "../helpers/dateHelper";
+import { CategoryRepository } from "../repos/categoryRepository";
 import { EventRepository } from "../repos/eventRepository";
 
 export default class implements ICommand {
     data: SlashCommandBuilder;
     client: CustomClient;
     isAdminOnly: boolean = false;
-    eventRepo: EventRepository;
     dateHelper: DateHelper;
     
     constructor(client: CustomClient){
@@ -19,7 +19,6 @@ export default class implements ICommand {
 		    .setDescription('Show the events of today');
         
         this.client = client;
-        this.eventRepo = new EventRepository(client);
         this.dateHelper = new DateHelper();
     }
 
@@ -27,7 +26,7 @@ export default class implements ICommand {
         var month = this.dateHelper.getCurrentDateDayNumber();
         var day = this.dateHelper.getCurrentDateMonthNumber();
 
-        var result = this.eventRepo.getEventsByDate(day, month);
+        var result = new EventRepository(this.client).getEventsByDate(day, month);
         
         if(result.length > 0) {
             let exampleEmbed = new MessageEmbed()
@@ -35,14 +34,11 @@ export default class implements ICommand {
                 .setTimestamp()
                 .setColor("#ADD8E6");
 
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'General'), '🏛️ General', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Architecture'), '🏗 Architecture', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'War'), '⚔️ War', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Politics'), '🌐 Politics', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Art and Culture'), '🎭 Art and Culture', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Sports'), '🏈 Sports', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Birthday'), '👶 Birthday', exampleEmbed);
-            this.addFilteredFieldsToEmbed(result.filter(x => x.category == 'Games'), '🎮 Games', exampleEmbed);
+            var categories = new CategoryRepository(this.client).GetCategories();
+
+            categories.forEach(category => {
+                this.addFilteredFieldsToEmbed(result.filter(x => x.category == category.name), category.headerText, exampleEmbed);
+            });
             
             interaction.reply({ embeds: [exampleEmbed] });
         }
@@ -51,7 +47,7 @@ export default class implements ICommand {
         }
     }
     
-    addFilteredFieldsToEmbed(events : EventEntity[], categoryTitle: string, embed: MessageEmbed) {
+    private addFilteredFieldsToEmbed(events : EventEntity[], categoryTitle: string, embed: MessageEmbed) {
         if(events.length > 0){
             let eventText = '';
             events.forEach(x => {

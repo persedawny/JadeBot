@@ -1,3 +1,5 @@
+import { CustomClient } from "./client/customClient";
+
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
@@ -9,9 +11,11 @@ dotenv.config();
 const commands = [];
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.ts'));
 
+var client = new CustomClient();
+
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`).default;
-	commands.push(new command().data.toJSON());
+	commands.push(new command(client).data.toJSON());
 }
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);

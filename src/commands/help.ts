@@ -17,7 +17,6 @@ export default class implements ICommand {
     }
 
     execute(interaction: CommandInteraction): void {
-        // TODO: Embed maker in boilerplate?
         let exampleEmbed = new MessageEmbed()
         .setAuthor({ name: this.client.user.username, iconURL: this.client.user.avatarURL() })
         .setTimestamp()

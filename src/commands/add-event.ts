@@ -2,7 +2,9 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { ICommand } from "../abstractions/ICommand";
 import { CustomClient } from "../client/customClient";
+import { CategoryRepository } from "../repos/categoryRepository";
 import { EventRepository } from "../repos/eventRepository";
+import { MonthRepository } from "../repos/monthRepository";
 
 const eventEntity = require('../database/models/eventEntity').default;
 
@@ -10,9 +12,10 @@ export default class implements ICommand {
     data: SlashCommandBuilder;
     client: CustomClient;
     isAdminOnly: boolean = false;
-    eventRepo: EventRepository;
     
     constructor(client: CustomClient){
+        this.client = client;
+
         this.data = new SlashCommandBuilder()
 		    .setName('add-event')
 		    .setDescription('Add an event to the database.');
@@ -22,40 +25,23 @@ export default class implements ICommand {
                 .setDescription(`What happened?`)
                 .setRequired(true));
 
+        let categories = new CategoryRepository(client).GetCategoryOptionList();
+    
         this.data.addStringOption(option =>
             option
                 .setName('category')
                 .setDescription("What category do you wanna add this event to?")
                 .setRequired(true)
-                .addChoice("General","General")
-                .addChoice("Architecture", "Architecture")
-                .addChoice("War", "War")
-                .addChoice("Politics", "Politics")
-                .addChoice("Art and Culture", "Art and Culture")
-                .addChoice("Religion", "Religion")
-                .addChoice("Sports", "Sports")
-                .addChoice("Science and Technology", "Science and Technology")
-                .addChoice("Birthday", "Birthday")
-                .addChoice("Games", "Games")
+                .addChoices(categories)
             );
 
+        let months = new MonthRepository(client).GetMonthOptionList();
+
         this.data.addStringOption(option =>
-            option
-            .setName('month')
-            .setDescription("What month did this happen in?")
-            .setRequired(true)
-            .addChoice("January", "January")
-            .addChoice("February", "February")
-            .addChoice("March", "March")
-            .addChoice("April", "April")
-            .addChoice("May", "May")
-            .addChoice("June", "June")
-            .addChoice("July", "July")
-            .addChoice("August", "August")
-            .addChoice("September", "September")
-            .addChoice("October", "October")
-            .addChoice("November", "November")
-            .addChoice("December", "December")
+            option.setName('month')
+                .setDescription("What month did this happen in?")
+                .setRequired(true)
+                .addChoices(months)
         );
 
         this.data.addNumberOption(option =>
@@ -71,9 +57,6 @@ export default class implements ICommand {
             .setDescription("What year did this happen in?")
             .setRequired(false)
         );
-        
-        this.client = client;
-        this.eventRepo = new EventRepository(client);
     }
 
     execute(interaction: CommandInteraction): void {
@@ -91,7 +74,7 @@ export default class implements ICommand {
         event.category = category
         event.accepted = '0';
 
-        this.eventRepo.add(event);
+        new EventRepository(this.client).add(event);
         interaction.reply("Did it!");
     }
 }
