@@ -4,10 +4,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+DatabaseCreator.CreateDatabase(client);
+
 var client = new CustomClient();
 client.initializeEvents();
 client.initializeCommands();
 client.login(process.env.DISCORD_TOKEN);
 client.initializeAndStartCronJobs();
-
-DatabaseCreator.CreateDatabase(client);
