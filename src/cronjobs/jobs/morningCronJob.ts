@@ -11,8 +11,8 @@ export default class extends CustomCronJob{
         super('00', '00', '9',
             () => {
                 var dateHelper = new DateHelper();
-                var month = dateHelper.getCurrentDateDayNumber();
-                var day = dateHelper.getCurrentDateMonthNumber();
+                var month = dateHelper.getCurrentDateMonthNumber();
+                var day = dateHelper.getCurrentDateDayNumber();
                 
                 var result = new EventRepository(client).getEventsByDate(day, month);
                 
@@ -22,7 +22,8 @@ export default class extends CustomCronJob{
                         .setTimestamp()
                         .setColor("#ADD8E6");
                 
-                    var categories = new CategoryRepository(this.client).GetCategories();
+                    var repo = new CategoryRepository(client);
+                    var categories = repo.GetCategories();
 
                     categories.forEach(category => {
                         this.addFilteredFieldsToEmbed(result.filter(x => x.category == category.name), category.headerText, exampleEmbed);

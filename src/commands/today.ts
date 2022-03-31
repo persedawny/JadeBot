@@ -23,8 +23,8 @@ export default class implements ICommand {
     }
 
     execute(interaction: CommandInteraction): void {
-        var month = this.dateHelper.getCurrentDateDayNumber();
-        var day = this.dateHelper.getCurrentDateMonthNumber();
+        var month = this.dateHelper.getCurrentDateMonthNumber();
+        var day = this.dateHelper.getCurrentDateDayNumber();
 
         var result = new EventRepository(this.client).getEventsByDate(day, month);
         
