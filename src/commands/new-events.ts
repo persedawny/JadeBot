@@ -22,12 +22,14 @@ export default class implements ICommand {
     execute(interaction: CommandInteraction): void {
         let events = this.eventRepo.getUnacceptedCommands();
 
-        let message = "";
+        if(events.length > 0){
+            let message = "";
 
-        events.forEach(event => {
-            message += `${event.rowid}. ${event.day}-${event.month}-${event.year}: ${event.text}\n`;
-        });
-
-        interaction.reply(message);
+            events.forEach(event => {
+                message += `${event.rowid}. ${event.day}-${event.month}-${event.year}: ${event.text}\n`;
+            });
+    
+            interaction.reply(message);
+        }
     }
 }
