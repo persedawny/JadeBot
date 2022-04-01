@@ -36,14 +36,6 @@ export default class extends CustomCronJob{
                         }
                     );
                 }
-                else {
-                    client.channels.fetch(`673917865375825932`).then(
-                        result => {
-                            var channel = result as TextChannel;
-                            channel.send(`Wow, as far as I know nothing really happened today!\n If you can think of something, please consider adding it with /add-event :) .`);
-                        }
-                    );
-                }
             });
     }
 
